@@ -2,7 +2,7 @@
     package="com.example.practice">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="practice"
+        android:label="tapGame"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
