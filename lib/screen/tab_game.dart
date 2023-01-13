@@ -76,46 +76,51 @@ class _TabGameState extends State<TabGame> {
               child: TimeCheck(signal :startSignal,gameCount: gameCount,choiceCount: choiceCount),
             ),
             Expanded(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: btnCount.map((el) => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: el.map((num) =>
-                        // el.toString().split('').shuffle();
-                      Padding(
-                        padding: EdgeInsets.only(left:  10.0, top: 10.0),
-                        child: SizedBox(
-                          width: 100.0,
-                          height: 100.0,
-                          child: ElevatedButton(
-                            onPressed:(){
-                              setState(() {
-                                if(gameCount[cnt] == num){
-                                  print('2 dd ${cnt} num ${num}');
-                                  choiceCount.add(num);
-                                  cnt = cnt+1;
-                                }
-                              });
-                              if(choiceCount.length == gameCount.length){
-                                startSignal = false;
-                                choiceCount.clear();
-                                cnt = 0;
-                                _stopTime();
-                              }
-                            },
-                            child:
-                              Text(
-                              '${num}',
-                                style: TextStyle(fontSize: 40, color: Colors.white),
-                            )
-                          ),
-                        ),
-                      )
-                    ).toList(),
-                  )).toList(),
-                )
+              child: Stack(
+                children:[ Positioned(
+                  bottom: 15,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: btnCount.map((el) => Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: el.map((num) =>
+                            // el.toString().split('').shuffle();
+                          Padding(
+                            padding: EdgeInsets.only(left:  10.0, top: 10.0),
+                            child: SizedBox(
+                              width: 100.0,
+                              height: 100.0,
+                              child: ElevatedButton(
+                                onPressed:(){
+                                  setState(() {
+                                    if(gameCount[cnt] == num){
+                                      print('2 dd ${cnt} num ${num}');
+                                      choiceCount.add(num);
+                                      cnt = cnt+1;
+                                    }
+                                  });
+                                  if(choiceCount.length == gameCount.length){
+                                    startSignal = false;
+                                    choiceCount.clear();
+                                    cnt = 0;
+                                    _stopTime();
+                                  }
+                                },
+                                child:
+                                  Text(
+                                  '${num}',
+                                    style: TextStyle(fontSize: 40, color: Colors.white),
+                                )
+                              ),
+                            ),
+                          )
+                        ).toList(),
+                      )).toList(),
+                    )
+                  ),
+                )],
               ),
             ),
             SizedBox(
