@@ -72,7 +72,7 @@ class _TabGameState extends State<TabGame> {
           children: [
             TimeRunning(),
             Padding(
-              padding: const EdgeInsets.only(top:100.0),
+              padding: const EdgeInsets.only(top:20.0),
               child: TimeCheck(signal :startSignal,gameCount: gameCount,choiceCount: choiceCount),
             ),
             Expanded(
