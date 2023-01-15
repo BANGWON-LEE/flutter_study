@@ -22,6 +22,22 @@ class _TabGameState extends State<TabGame> {
   bool startSignal = false;
   int cnt  = 0;
 
+  Map<int,String> kind = {0:'8',1:'B',2:'A',3:'C',4:'D',5:'F',6:'E',7:'B',8:'A',9:'F', 10:'E', 11 : '7' };
+
+  String cntStr = '';
+  String hexNum = '';
+  String secondHexNum = '';
+  String thirdHexNum = '';
+  String fourthHexNum = '';
+
+  int codeHex = 0;
+  int secondCodeHex = 0;
+  int thirdCodeHex = 0;
+  int fourthCodeHex = 0;
+
+  int random = Random().nextInt(99);
+  int indexRandom = Random().nextInt(10);
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -85,7 +101,7 @@ class _TabGameState extends State<TabGame> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: btnCount.map((el) => Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: el.map((num) =>
+                        children: el.asMap().entries.map((num) =>
                             // el.toString().split('').shuffle();
                           Padding(
                             padding: EdgeInsets.only(left:  10.0, top: 10.0),
@@ -93,28 +109,51 @@ class _TabGameState extends State<TabGame> {
                               width: 100.0,
                               height: 100.0,
                               child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                   primary: (random-cnt) % int.parse(num.value)   == 1 ? Color(codeHex) :
+                                   (random+cnt)  % int.parse(num.value)  == 3  ? Color(secondCodeHex) :
+                                   (random) % int.parse(num.value) == 2  ? Color(thirdCodeHex) :
+                                   ((random+31) / int.parse(num.value)) % 2 == 0 ?  Color(fourthCodeHex) : Colors.blue
+                                ),
                                 onPressed:(){
+                                  cntStr = cnt.toString();
+                                  hexNum = '0xff${kind[indexRandom+3]}C5C5C';
+                                  secondHexNum = '0xff${kind[indexRandom+1]}F7F50';
+                                  thirdHexNum = '0xff${kind[indexRandom]}2FDf4';
+                                  fourthHexNum = '0xff${kind[indexRandom+2]}2FDf4';
+
+                                  codeHex = int.parse(hexNum);
+                                  secondCodeHex = int.parse(secondHexNum);
+                                  thirdCodeHex = int.parse(thirdHexNum);
+                                  fourthCodeHex = int.parse(fourthHexNum);
+
                                   setState(() {
-                                    if(gameCount[cnt] == num){
-                                      print('2 dd ${cnt} num ${num}');
-                                      choiceCount.add(num);
+                                    if(gameCount[cnt] == num.value){
+                                      // print('2 dd ${cnt} num ${num}');
+                                      choiceCount.add(num.value);
+                                      if(cnt % 2 != 0) {
+                                        btnCount.shuffle();
+                                      }
                                       cnt = cnt+1;
+                                    } else {
+                                      _time+=25;
                                     }
                                   });
                                   if(choiceCount.length == gameCount.length){
                                     startSignal = false;
                                     choiceCount.clear();
-                                    cnt = 0;
+                                    cnt = cnt * 0;
                                     _stopTime();
                                   }
                                 },
                                 child:
                                   Text(
-                                  '${num}',
+                                  '${num.value}',
                                     style: TextStyle(fontSize: 40, color: Colors.white),
                                 )
                               ),
                             ),
+
                           )
                         ).toList(),
                       )).toList(),
