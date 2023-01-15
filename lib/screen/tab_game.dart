@@ -119,30 +119,38 @@ class _TabGameState extends State<TabGame> {
                                 ),
                                 onPressed:(){
                                   cntStr = cnt.toString();
-                                  hexNum = '0xffC5${kind[indexRandom+3]}C5C';
-                                  secondHexNum = '0xffF7F${kind[indexRandom+1]}50';
-                                  thirdHexNum = '0xff2FD${kind[indexRandom]}f4';
-                                  fourthHexNum = '0xff2FD${kind[indexRandom+2]}f4';
+                                  hexNum = '0xffC${kind[indexRandom+3]}5C5C';
+                                  secondHexNum = '0xffF7${kind[indexRandom+1]}F50';
+                                  thirdHexNum = '0xff2F${kind[indexRandom]}Df4';
+                                  fourthHexNum = '0xff2F${kind[indexRandom+2]}Df4';
 
                                   codeHex = int.parse(hexNum);
                                   secondCodeHex = int.parse(secondHexNum);
                                   thirdCodeHex = int.parse(thirdHexNum);
                                   fourthCodeHex = int.parse(fourthHexNum);
 
+                                  int rangeReplace = 0;
+
                                   setState(() {
-                                    if(gameCount[cnt] == num.value){
+                                    if(gameCount[0] == num.value){
                                       // print('2 dd ${cnt} num ${num}');
+
                                       choiceCount.add(num.value);
                                       btnCount.shuffle();
+                                      gameCount.removeRange(0, 1);
                                       cnt = cnt+1;
+                                      gameCount.shuffle();
+
+
                                     } else {
                                       _time+=25;
                                     }
                                   });
-                                  if(choiceCount.length == gameCount.length){
+                                  if(choiceCount.length == 9){
                                     startSignal = false;
                                     choiceCount.clear();
                                     cnt = cnt * 0;
+                                    gameCount = ['1','2','3','4','5','6','7','8','9'];
                                     _stopTime();
                                   }
                                 },
