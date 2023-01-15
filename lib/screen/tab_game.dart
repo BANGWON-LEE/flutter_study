@@ -22,7 +22,7 @@ class _TabGameState extends State<TabGame> {
   bool startSignal = false;
   int cnt  = 0;
 
-  Map<int,String> kind = {0:'8',1:'B',2:'A',3:'C',4:'D',5:'F',6:'E',7:'B',8:'A',9:'F', 10:'E', 11 : '7' };
+  Map<int,String> kind = {0:'8',1:'B',2:'A',3:'C',4:'D',5:'F',6:'E',7:'B',8:'A',9:'F', 10:'E', 11 : '7', 12 : 'E',13 : 'F',14 : 'A' };
 
   String cntStr = '';
   String hexNum = '';
@@ -110,17 +110,19 @@ class _TabGameState extends State<TabGame> {
                               height: 100.0,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                   primary: (random-cnt) % int.parse(num.value)   == 1 ? Color(codeHex) :
+                                   primary:
+                                   cnt == 0 ? Colors.blue :
+                                   (random-cnt) % int.parse(num.value) == 1 ? Color(codeHex) :
                                    (random+cnt)  % int.parse(num.value)  == 3  ? Color(secondCodeHex) :
-                                   (random) % int.parse(num.value) == 2  ? Color(thirdCodeHex) :
-                                   ((random+31) / int.parse(num.value)) % 2 == 0 ?  Color(fourthCodeHex) : Colors.blue
+                                   (random + cnt) % int.parse(num.value) == 2  ? Color(thirdCodeHex) :
+                                   ((random+31) / int.parse(num.value)) % 2 == 0 ?  Color(fourthCodeHex) : Colors.pinkAccent
                                 ),
                                 onPressed:(){
                                   cntStr = cnt.toString();
-                                  hexNum = '0xff${kind[indexRandom+3]}C5C5C';
-                                  secondHexNum = '0xff${kind[indexRandom+1]}F7F50';
-                                  thirdHexNum = '0xff${kind[indexRandom]}2FDf4';
-                                  fourthHexNum = '0xff${kind[indexRandom+2]}2FDf4';
+                                  hexNum = '0xffC5${kind[indexRandom+3]}C5C';
+                                  secondHexNum = '0xffF7F${kind[indexRandom+1]}50';
+                                  thirdHexNum = '0xff2FD${kind[indexRandom]}f4';
+                                  fourthHexNum = '0xff2FD${kind[indexRandom+2]}f4';
 
                                   codeHex = int.parse(hexNum);
                                   secondCodeHex = int.parse(secondHexNum);
@@ -131,9 +133,7 @@ class _TabGameState extends State<TabGame> {
                                     if(gameCount[cnt] == num.value){
                                       // print('2 dd ${cnt} num ${num}');
                                       choiceCount.add(num.value);
-                                      if(cnt % 2 != 0) {
-                                        btnCount.shuffle();
-                                      }
+                                      btnCount.shuffle();
                                       cnt = cnt+1;
                                     } else {
                                       _time+=25;
