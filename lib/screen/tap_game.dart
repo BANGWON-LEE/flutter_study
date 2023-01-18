@@ -1,17 +1,18 @@
 import 'dart:math';
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
-class TabGame extends StatefulWidget {
-  const TabGame({Key? key}) : super(key: key);
+class TapGame extends StatefulWidget {
+  const TapGame({Key? key}) : super(key: key);
 
   @override
-  State<TabGame> createState() => _TabGameState();
+  State<TapGame> createState() => _TapGameState();
 
 }
 
-class _TabGameState extends State<TabGame> {
+class _TapGameState extends State<TapGame> {
   Timer? _timer;
   var _time = 0;
   // List<int> btnCount = [123,456,789];
@@ -50,6 +51,9 @@ class _TabGameState extends State<TabGame> {
     _timer = Timer.periodic(Duration(milliseconds: 10), (timer) {
         setState(() {
           _time++;
+          if(_time == 3000){
+            _stopTime();
+          }
         });
     });
   }
@@ -105,60 +109,80 @@ class _TabGameState extends State<TabGame> {
                             // el.toString().split('').shuffle();
                           Padding(
                             padding: EdgeInsets.only(left:  10.0, top: 10.0),
-                            child: SizedBox(
-                              width: 100.0,
-                              height: 100.0,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                   primary:
-                                   cnt == 0 ? Colors.blue :
-                                   (random-cnt) % int.parse(num.value) == 1 ? Color(codeHex) :
-                                   (random+cnt)  % int.parse(num.value)  == 3  ? Color(secondCodeHex) :
-                                   (random + cnt) % int.parse(num.value) == 2  ? Color(thirdCodeHex) :
-                                   ((random+31) / int.parse(num.value)) % 2 == 0 ?  Color(fourthCodeHex) : Colors.pinkAccent
-                                ),
-                                onPressed:(){
-                                  cntStr = cnt.toString();
-                                  hexNum = '0xffC${kind[indexRandom+3]}5C5C';
-                                  secondHexNum = '0xffF7${kind[indexRandom+1]}F50';
-                                  thirdHexNum = '0xff2F${kind[indexRandom]}Df4';
-                                  fourthHexNum = '0xff2F${kind[indexRandom+2]}Df4';
+                            child: GestureDetector(onTap: (){
+                              if(gameCount[0] == num.value){
+                                // print('2 dd ${cnt} num ${num}');
+                                HapticFeedback.lightImpact();
 
-                                  codeHex = int.parse(hexNum);
-                                  secondCodeHex = int.parse(secondHexNum);
-                                  thirdCodeHex = int.parse(thirdHexNum);
-                                  fourthCodeHex = int.parse(fourthHexNum);
-
-                                  int rangeReplace = 0;
-
-                                  setState(() {
-                                    if(gameCount[0] == num.value){
-                                      // print('2 dd ${cnt} num ${num}');
-
-                                      choiceCount.add(num.value);
-                                      btnCount.shuffle();
-                                      gameCount.removeRange(0, 1);
-                                      cnt = cnt+1;
-                                      gameCount.shuffle();
+                                choiceCount.add(num.value);
+                                btnCount.shuffle();
+                                gameCount.removeRange(0, 1);
+                                cnt = cnt+1;
+                                gameCount.shuffle();
 
 
-                                    } else {
-                                      _time+=25;
+                              } else {
+                                HapticFeedback.heavyImpact();
+                                _time+=25;
+                              }
+                            },
+                              child: SizedBox(
+                                width: 100.0,
+                                height: 100.0,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                     primary:
+                                     cnt == 0 ? Colors.blue :
+                                     (random-cnt) % int.parse(num.value) == 1 ? Color(codeHex) :
+                                     (random+cnt)  % int.parse(num.value)  == 3  ? Color(secondCodeHex) :
+                                     (random + cnt) % int.parse(num.value) == 2  ? Color(thirdCodeHex) :
+                                     ((random+31) / int.parse(num.value)) % 2 == 0 ?  Color(fourthCodeHex) : Colors.pinkAccent
+                                  ),
+                                  onPressed:(){
+                                    cntStr = cnt.toString();
+                                    hexNum = '0xffC${kind[indexRandom+3]}5C5C';
+                                    secondHexNum = '0xffF7${kind[indexRandom+1]}F50';
+                                    thirdHexNum = '0xff2F${kind[indexRandom]}Df4';
+                                    fourthHexNum = '0xff2F${kind[indexRandom+2]}Df4';
+
+                                    codeHex = int.parse(hexNum);
+                                    secondCodeHex = int.parse(secondHexNum);
+                                    thirdCodeHex = int.parse(thirdHexNum);
+                                    fourthCodeHex = int.parse(fourthHexNum);
+
+                                    int rangeReplace = 0;
+
+                                    setState(() {
+                                      if(gameCount[0] == num.value){
+                                        // print('2 dd ${cnt} num ${num}');
+
+                                        // HapticFeedback.heavyImpact();
+                                        choiceCount.add(num.value);
+                                        btnCount.shuffle();
+                                        gameCount.removeRange(0, 1);
+                                        cnt = cnt+1;
+                                        gameCount.shuffle();
+
+
+                                      } else {
+                                        // HapticFeedback.vibrate();
+                                        _time+=25;
+                                      }
+                                    });
+                                    if(choiceCount.length == 9){
+                                      startSignal = false;
+                                      choiceCount.clear();
+                                      cnt = cnt * 0;
+                                      gameCount = ['1','2','3','4','5','6','7','8','9'];
+                                      _stopTime();
                                     }
-                                  });
-                                  if(choiceCount.length == 9){
-                                    startSignal = false;
-                                    choiceCount.clear();
-                                    cnt = cnt * 0;
-                                    gameCount = ['1','2','3','4','5','6','7','8','9'];
-                                    _stopTime();
-                                  }
-                                },
-                                child:
-                                  Text(
-                                  '${num.value}',
-                                    style: TextStyle(fontSize: 40, color: Colors.white),
-                                )
+                                  },
+                                  child:
+                                    Text(
+                                    '${num.value}',
+                                      style: TextStyle(fontSize: 40, color: Colors.white),
+                                  )
+                                ),
                               ),
                             ),
 
