@@ -41,7 +41,8 @@ class _TapGameState extends State<TapGame> {
   int random = Random().nextInt(99);
   int indexRandom = Random().nextInt(10);
 
-  void setRegisterHttp() async {
+  void setEditRecordHttp() async {
+    print('start game');
     BaseOptions options = BaseOptions(
       baseUrl: 'http://192.168.123.110:5000',
       connectTimeout: 3000,
@@ -50,15 +51,27 @@ class _TapGameState extends State<TapGame> {
     Dio dio = new Dio(options);
     final prefs = await SharedPreferences.getInstance();
 
-    try{
-      final res = await dio.post("/api/record/level1/edit", data: {"mem_userId":  prefs.getString('userId'), "rc_record": _time, });
-      print('response ${res}');
-      if(res.statusCode == 200){
+    var prevRecord =  prefs.getInt('rc_record');
 
-        // Navigator.pushNamed(context, '/');
+    print('prevR_1  ${prevRecord}');
+    print('_time_1 ${_time}');
+
+    if(  prevRecord != null && prevRecord! > _time) {
+        print('prevR  ${prevRecord}');
+        print('_time  ${_time}');
+
+      try {
+        final res = await dio.put("/api/record/level1/edit", data: {
+          "mem_userId": prefs.getString('userId'),
+          "rc_record": _time,
+        });
+        print('response edit ${res}');
+
+          Navigator.pushNamed(context, '/lobby');
+
+      } catch (e) {
+        // _showMyDialog();
       }
-    }catch(e){
-      // _showMyDialog();
     }
   }
 
@@ -67,6 +80,7 @@ class _TapGameState extends State<TapGame> {
     // TODO: implement dispose
     print('dispose 실행');
     choiceCount.clear();
+    _time = 0;
     super.dispose();
   }
 
@@ -183,7 +197,10 @@ class _TapGameState extends State<TapGame> {
                                     cnt = cnt * 0;
                                     gameCount = ['1','2','3','4','5','6','7','8','9'];
                                     _stopTime();
+                                    setEditRecordHttp();
+
                                   }
+
                                 },
                                 child:
                                   Text(
