@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -53,8 +54,9 @@ class _RegisterState extends State<Register> {
 
 
   void setRegisterHttp() async {
+    String? baseUrl = dotenv.env['BASE_URL'];
     BaseOptions options = BaseOptions(
-      baseUrl: 'http://192.168.123.110:5000',
+      baseUrl: baseUrl!,
       connectTimeout: 3000,
       receiveTimeout: 3000,
     );
